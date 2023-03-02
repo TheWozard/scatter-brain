@@ -1,0 +1,47 @@
+%YAML 1.2
+---
+name: note
+scope: default
+version: 2
+
+contexts:
+  main:
+    - match: ^\/\/.*
+      scope: comment
+    - match: ^>.*
+      scope: comment
+    - match: ^#.*
+      scope: comment
+    - match: ^\/\*
+      push: comment
+    - match: '"'
+      push: string
+
+  comment:
+    - meta_scope: comment
+    - match: \*\/
+      pop: true
+
+  string:
+    - meta_scope: string
+    - match: \\.
+      scope: constant
+    - match: '"'
+      pop: true
+
+  muted:
+    - meta_scope: comment
+    - match: '\n'
+      pop: true
+
+  link:
+    - meta_scope: link
+    - match: '='
+      push: node
+    - match: '-'
+      pop: true
+
+  node:
+    - meta_scope: node
+    - match: '='
+      pop: true
